@@ -1,0 +1,30 @@
+<resources>
+
+    <!-- Merchandise Type Array -->
+    <string-array name="merchandise_type_array">
+        <item>Select merchandise type</item>
+        <item>Nocus</item>
+        <item>Tabogok</item>
+        <item>Katambak</item>
+        <item>Keros</item>
+        <item>Sari</item>
+    </string-array>
+
+    <!-- Buyer Array -->
+    <string-array name="buyer_array">
+        <item>Select a buyer</item>
+        <item>Unknown</item>
+        <item>Flora</item>
+        <item>Rheo</item>
+        <item>Roger</item>
+    </string-array>
+
+    <!-- Payment Status Array -->
+    <string-array name="payment_status_array">
+        <item>Select payment status</item>
+        <item>Paid</item>
+        <item>Credit</item>
+    </string-array>
+
+    <!-- Add any other strings as needed -->
+</resources>

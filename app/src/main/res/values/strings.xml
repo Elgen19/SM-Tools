@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Record Keeper</string>
+    <string name="add_record">Add record</string>
+    <string name="add_a_tally">add a tally</string>
+    <string name="enter_kilos">Enter kilos</string>
+    <string name="enter_price">Enter price</string>
+    <string name="cancel">Cancel</string>
+    <string name="add_tally">Add tally</string>
+    <string name="done">Done</string>
+    <string name="close">close</string>
+    <string name="record_tally">Record Tally</string>
+</resources>

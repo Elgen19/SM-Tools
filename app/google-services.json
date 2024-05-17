@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "322365817441",
+    "project_id": "operation-overlord-4b17c",
+    "storage_bucket": "operation-overlord-4b17c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:322365817441:android:cbbb6fefe0383fdd0ce020",
+        "android_client_info": {
+          "package_name": "com.elgenium.recordkeeper"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMNAdvzfvRoXHYPGX3ojBqtPTMCa5qoyw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
