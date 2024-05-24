@@ -58,7 +58,7 @@
                 android:id="@+id/textInputEditTextKilos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="numberDecimal"
+                android:inputType="number"
                 tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -130,11 +130,12 @@
         android:orientation="horizontal"
         android:gravity="end">
 
+
         <Button
-            android:id="@+id/buttonAddTally"
+            android:id="@+id/buttonUpdateChanges"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/add_tally"
+            android:text="Update"
             android:layout_marginStart="16dp"
             tools:ignore="ButtonStyle" />
     </LinearLayout>

@@ -3,22 +3,21 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingTop="16dp"
-    android:paddingBottom="16dp">
+    android:layout_marginBottom="16dp">
 
-    <!-- TextView for kilos and merchandise type -->
+    <!-- MerchandiseType -->
     <TextView
-        android:id="@+id/textViewKilosMerchandise"
+        android:id="@+id/merchandiseType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18sp" />
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
-    <!-- TextView for buyer name -->
+    <!-- Prices -->
     <TextView
-        android:id="@+id/textViewBuyer"
+        android:id="@+id/priceList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:layout_marginTop="4dp" />
+        android:textSize="14sp" />
 
 </LinearLayout>

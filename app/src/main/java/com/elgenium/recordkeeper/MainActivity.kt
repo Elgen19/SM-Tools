@@ -2,11 +2,14 @@ package com.elgenium.recordkeeper
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.elgenium.recordkeeper.adapters.RecordNameAdapter
 import com.elgenium.recordkeeper.databinding.ActivityMainBinding
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -22,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var database: DatabaseReference
     private lateinit var recordNameAdapter: RecordNameAdapter
     private val recordNames = mutableListOf<String>()
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +34,14 @@ class MainActivity : AppCompatActivity() {
 
         // Initialize Firebase Database
         database = FirebaseDatabase.getInstance().reference.child("records")
+
+        // Initialize Firebase Auth
+        auth = FirebaseAuth.getInstance()
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            // Fetch user's name from Firebase
+            fetchUserName(currentUser.uid)
+        }
 
         // Initialize RecyclerView
         recordNameAdapter = RecordNameAdapter(recordNames) { recordName ->
@@ -58,6 +70,44 @@ class MainActivity : AppCompatActivity() {
             // Check if the record name already exists before adding it
             checkAndAddRecordName(recordName)
         }
+
+        binding.userImageButton.setOnClickListener {
+            startActivity(Intent(this, UserInfoActivity::class.java))
+            finish()
+        }
+
+
+        // Add TextWatcher to TextInputEditText
+        binding.textInputEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                filterRecords(s.toString())
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+    }
+
+    private fun filterRecords(query: String) {
+        val filteredRecords = recordNames.filter { it.contains(query, ignoreCase = true) }
+        recordNameAdapter.updateRecords(filteredRecords)
+    }
+
+    private fun fetchUserName(userId: String) {
+        val userRef = FirebaseDatabase.getInstance().reference.child("user").child(userId).child("name")
+        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val userName = snapshot.getValue(String::class.java)
+                if (userName != null) {
+                    binding.userNameTextView.text = String.format("Howdy, %s", userName)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(this@MainActivity, "Failed to load user name", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     private fun loadRecordNames() {
@@ -74,7 +124,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                // Handle possible errors.
+                Toast.makeText(this@MainActivity, "Error loading records", Toast.LENGTH_SHORT).show()
             }
         })
     }

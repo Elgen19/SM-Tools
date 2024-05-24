@@ -5,9 +5,12 @@
         <item>Select merchandise type</item>
         <item>Nocus</item>
         <item>Tabogok</item>
-        <item>Katambak</item>
-        <item>Keros</item>
+        <item>Katambak Small</item>
+        <item>Katambak Big</item>
+        <item>Keros Small</item>
+        <item>Keros Big</item>
         <item>Sari</item>
+        <item>CuttleFish</item>
     </string-array>
 
     <!-- Buyer Array -->
@@ -26,5 +29,11 @@
         <item>Credit</item>
     </string-array>
 
-    <!-- Add any other strings as needed -->
+    <!-- Expenses Array -->
+    <string-array name="expenses_array">
+        <item>Select expenses</item>
+        <item>Corodo planta</item>
+        <item>Planta driver allowance</item>
+
+    </string-array>
 </resources>

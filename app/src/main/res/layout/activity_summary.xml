@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- First Row: Summary and Payments -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/summaryAndPaymentsTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Summary and Payments"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/editImageViewForSummaryAndPayment"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="Edit Summary and Payments"
+                android:src="@drawable/edit" />
+
+            <ImageView
+                android:id="@+id/sendImageViewForSummaryAndPayment"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="Send Summary and Payments"
+                android:src="@drawable/send" />
+        </LinearLayout>
+
+        <!-- Edit Text for Summary and Payments -->
+        <EditText
+            android:id="@+id/editTextForSummaryAndPayment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter your text here"
+            android:enabled="false" /> <!-- Set to disabled -->
+
+        <!-- Second Row: Prices and Credits -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/pricesAndCreditsTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Prices and Credits"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/editImageViewForPricesAndCredits"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="Edit Prices and Credits"
+                android:src="@drawable/edit" />
+
+            <ImageView
+                android:id="@+id/sendImageViewForPricesAndCredits"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="Send Prices and Credits"
+                android:src="@drawable/send" />
+        </LinearLayout>
+
+        <!-- Edit Text for Prices and Credits -->
+        <EditText
+            android:id="@+id/editTextForPricesAndCredits"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter your text here"
+            android:enabled="false" /> <!-- Set to disabled -->
+
+        <!-- Third Row: Number of Kilos -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/numberOfKilosTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Number of Kilos"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/editImageViewForNumberOfKilos"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="Edit Number of Kilos"
+                android:src="@drawable/edit" />
+
+            <ImageView
+                android:id="@+id/sendImageViewForNumberOfKilos"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="Send Number of Kilos"
+                android:src="@drawable/send" />
+        </LinearLayout>
+
+        <!-- Edit Text for Number of Kilos -->
+        <EditText
+            android:id="@+id/editTextForNumberOfKilos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter your text here"
+            android:enabled="false" /> <!-- Set to disabled -->
+
+        <!-- Fourth Row: Expenses -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/expensesTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Expenses"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/editImageViewForExpenses"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="@string/edit_expenses"
+                android:src="@drawable/edit" />
+
+            <ImageView
+                android:id="@+id/sendImageViewForExpenses"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="Send Expenses"
+                android:src="@drawable/send" />
+        </LinearLayout>
+
+        <!-- Edit Text for Expenses -->
+        <EditText
+            android:id="@+id/editTextForExpenses"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter your text here"
+            android:enabled="false" /> <!-- Set to disabled -->
+
+    </LinearLayout>
+</ScrollView>

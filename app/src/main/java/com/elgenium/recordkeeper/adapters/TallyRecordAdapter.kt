@@ -28,6 +28,8 @@ class TallyRecordAdapter(
         return tallyRecords.size
     }
 
+
+
     class TallyRecordViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val textViewKilosMerchandise: TextView = itemView.findViewById(R.id.textViewKilosMerchandise)
         private val textViewBuyer: TextView = itemView.findViewById(R.id.textViewBuyer)

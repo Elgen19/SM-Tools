@@ -9,4 +9,19 @@
     <string name="done">Done</string>
     <string name="close">close</string>
     <string name="record_tally">Record Tally</string>
+    <string name="merchandise_type">%s</string>
+    <string name="kilos_in_cash">%s kgs</string>
+    <string name="paid_in_cash">₱%s</string>
+    <string name="kilos_in_credit">%s kgs</string>
+    <string name="unpaid">₱%s</string>
+    <string name="total_kilos">%s kgs</string>
+    <string name="total_amount">₱%s</string>
+    <string name="select_expense">Select Expense</string>
+    <string name="select_quantity">Select Quantity</string>
+    <string name="select_unit">Select Unit</string>
+    <string name="use_with_quantity_and_unit">Use with quantity and unit</string>
+    <string name="add_expense">Add Expense</string>
+    <string name="send_message">send message</string>
+    <string name="edit_message">edit message</string>
+    <string name="edit_expenses">Edit Expenses</string>
 </resources>

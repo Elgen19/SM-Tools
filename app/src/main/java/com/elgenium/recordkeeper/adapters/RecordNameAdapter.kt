@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.elgenium.recordkeeper.R
 
 class RecordNameAdapter(
-    private val recordNames: List<String>,
+    private var recordNames: List<String>,
     private val onItemClick: (String) -> Unit
 ) : RecyclerView.Adapter<RecordNameAdapter.RecordNameViewHolder>() {
 
@@ -25,6 +25,11 @@ class RecordNameAdapter(
 
     override fun getItemCount(): Int {
         return recordNames.size
+    }
+
+    fun updateRecords(newRecords: List<String>) {
+        recordNames = newRecords
+        notifyDataSetChanged()
     }
 
     class RecordNameViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

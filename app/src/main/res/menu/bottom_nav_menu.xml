@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_tally_record"
+        android:icon="@drawable/tally"
+        android:title="Tally Record" />
+    <item
+        android:id="@+id/menu_reports"
+        android:icon="@drawable/reports"
+        android:title="Reports" />
+</menu>

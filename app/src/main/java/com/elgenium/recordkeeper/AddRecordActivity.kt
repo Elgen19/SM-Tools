@@ -3,6 +3,8 @@ package com.elgenium.recordkeeper
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -12,8 +14,7 @@ import com.elgenium.recordkeeper.databinding.ActivityAddRecordBinding
 import com.elgenium.recordkeeper.databinding.DialogAddTallyBinding
 import com.elgenium.recordkeeper.firebase.models.TallyRecord
 import com.google.firebase.database.*
-import java.text.SimpleDateFormat
-import java.util.*
+
 
 class AddRecordActivity : AppCompatActivity() {
 
@@ -21,6 +22,8 @@ class AddRecordActivity : AppCompatActivity() {
     private lateinit var database: DatabaseReference
     private lateinit var tallyRecordAdapter: TallyRecordAdapter
     private val tallyRecords = mutableListOf<TallyRecord>()
+    private var originalTallyRecords = mutableListOf<TallyRecord>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +32,10 @@ class AddRecordActivity : AppCompatActivity() {
 
         // Initialize Firebase Database
         database = FirebaseDatabase.getInstance().reference
+
+
+        // Retrieve the record name from the intent
+        val recordName = intent.getStringExtra("RECORD_NAME")
 
         // Initialize RecyclerView
         tallyRecordAdapter = TallyRecordAdapter(tallyRecords) { tallyRecord ->
@@ -40,16 +47,20 @@ class AddRecordActivity : AppCompatActivity() {
             intent.putExtra("MERCHANDISE_TYPE", tallyRecord.merchandiseType)
             intent.putExtra("PAYMENT_STATUS", tallyRecord.paymentStatus)
             intent.putExtra("TOTAL_AMOUNT", tallyRecord.totalAmount)
+            intent.putExtra("RECORD_NAME", tallyRecord.recordName)
             startActivity(intent)
         }
 
+        // Initialize RecyclerView
         binding.recyclerViewAddRecord.apply {
             layoutManager = LinearLayoutManager(this@AddRecordActivity)
             adapter = tallyRecordAdapter
         }
 
-        // Retrieve the record name from the intent
-        val recordName = intent.getStringExtra("RECORD_NAME")
+        // Load existing records from Firebase
+        if (recordName != null) {
+            loadTallyRecords(recordName)
+        }
 
         // Handle "Add a tally" button click
         binding.buttonAddTally.setOnClickListener {
@@ -58,20 +69,67 @@ class AddRecordActivity : AppCompatActivity() {
             }
         }
 
-        // Load existing records from Firebase
-        if (recordName != null) {
-            loadTallyRecords(recordName)
+
+
+        binding.bottomNavigation.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.menu_tally_record -> {
+                    // Handle Tally Record click
+                    true
+                }
+                R.id.menu_reports -> {
+                    // Handle Reports click
+                    val intent = Intent(this, AllReportsActivity::class.java)
+                    intent.putExtra("RECORD_NAME", recordName)
+                    startActivity(intent)
+                    finish()
+                    true
+                }
+                else -> false
+            }
         }
+
+        binding.textInputEditTextAddRecord.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                filterRecords(s.toString())
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+    }
+
+    private fun filterRecords(query: String) {
+        tallyRecords.clear()
+        if (query.isEmpty()) {
+            tallyRecords.addAll(originalTallyRecords)
+        } else {
+            val filteredList = originalTallyRecords.filter { tallyRecord ->
+                tallyRecord.merchandiseType.contains(query, ignoreCase = true) ||
+                        tallyRecord.buyer.contains(query, ignoreCase = true)
+            }
+            tallyRecords.addAll(filteredList)
+        }
+        tallyRecordAdapter.notifyDataSetChanged()
     }
 
     private fun loadTallyRecords(recordName: String) {
-        database.child("records").child(recordName).addValueEventListener(object : ValueEventListener {
+        database.child("records").child(recordName).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 tallyRecords.clear()
+                originalTallyRecords.clear()
+
+                // Loop through each child node under the recordName node
                 for (recordSnapshot in snapshot.children) {
-                    val tallyRecord = recordSnapshot.getValue(TallyRecord::class.java)
-                    if (tallyRecord != null) {
-                        tallyRecords.add(tallyRecord)
+                    // Check if the child node is not the "payments" node
+                    if (recordSnapshot.key != "payments") {
+                        // Retrieve TallyRecord data and add it to the tallyRecords list
+                        val tallyRecord = recordSnapshot.getValue(TallyRecord::class.java)
+                        if (tallyRecord != null && tallyRecord.merchandiseType.isNotBlank()) {
+                            tallyRecords.add(tallyRecord)
+                            originalTallyRecords.add(tallyRecord)
+                        }
                     }
                 }
                 tallyRecordAdapter.notifyDataSetChanged()
@@ -82,6 +140,7 @@ class AddRecordActivity : AppCompatActivity() {
             }
         })
     }
+
 
     private fun showAddTallyDialog(recordName: String) {
         // Inflate the dialog layout
@@ -95,12 +154,7 @@ class AddRecordActivity : AppCompatActivity() {
 
         // Set click listener for the "Add tally" button
         dialogBinding.buttonAddTally.setOnClickListener {
-            addTallyRecord(dialogBinding, recordName, dismissDialog = false, dialog)
-        }
-
-        // Set click listener for the "Done" button
-        dialogBinding.buttonDone.setOnClickListener {
-            addTallyRecord(dialogBinding, recordName, dismissDialog = true, dialog)
+            addTallyRecord(dialogBinding, recordName, dialog)
         }
 
         // Set click listener for the "Close" button
@@ -112,7 +166,8 @@ class AddRecordActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    private fun addTallyRecord(dialogBinding: DialogAddTallyBinding, recordName: String, dismissDialog: Boolean, dialog: AlertDialog) {
+
+    private fun addTallyRecord(dialogBinding: DialogAddTallyBinding, recordName: String, dialog: AlertDialog) {
         // Get user input
         val kilos = dialogBinding.textInputEditTextKilos.text.toString()
         val price = dialogBinding.textInputEditTextPrice.text.toString()
@@ -149,53 +204,44 @@ class AddRecordActivity : AppCompatActivity() {
         // Calculate the total amount
         val totalAmount = kilos.toDouble() * price.toDouble()
 
-        // Check if the record already exists for the given merchandiseType and buyer
-        database.child("records").child(recordName)
-            .orderByChild("merchandiseType")
-            .equalTo(merchandiseType)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    var recordUpdated = false
-                    for (snapshot in dataSnapshot.children) {
-                        val existingRecord = snapshot.getValue(TallyRecord::class.java)
-                        if (existingRecord != null && existingRecord.buyer == buyer) {
-                            // Update the existing record
-                            val updatedKilos = existingRecord.kilos + kilos.toDouble()
-                            val updatedTotalAmount = updatedKilos * existingRecord.price
-                            val updatedRecord = existingRecord.copy(kilos = updatedKilos, totalAmount = updatedTotalAmount)
-                            snapshot.ref.setValue(updatedRecord)
-                            recordUpdated = true
-                            break
-                        }
-                    }
-                    if (!recordUpdated) {
-                        // Save the new record
-                        val recordId = database.child("records").child(recordName).push().key
-                        val tallyRecord = TallyRecord(
-                            recordName,
-                            kilos.toDouble(),
-                            price.toDouble(),
-                            merchandiseType,
-                            buyer,
-                            paymentStatus,
-                            totalAmount
-                        )
+        // Save the new record
+        val recordId = database.child("records").child(recordName).push().key
+        val tallyRecord = TallyRecord(
+            recordName,
+            kilos.toDouble(),
+            price.toDouble(),
+            merchandiseType,
+            buyer,
+            paymentStatus,
+            totalAmount
+        )
 
-                        if (recordId != null) {
-                            database.child("records").child(recordName).child(recordId).setValue(tallyRecord)
-                        }
-                    }
-                    // Display success message
-                    Toast.makeText(this@AddRecordActivity, "Tally added successfully", Toast.LENGTH_SHORT).show()
-
-                    if (dismissDialog) {
+        if (recordId != null) {
+            database.child("records").child(recordName).child(recordId).setValue(tallyRecord)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        tallyRecords.add(tallyRecord)
+                        // Notify the adapter about the dataset change
+                        tallyRecordAdapter.notifyDataSetChanged()
+                        Toast.makeText(this@AddRecordActivity, "Tally added successfully", Toast.LENGTH_SHORT).show()
                         dialog.dismiss()
+                    } else {
+                        Toast.makeText(this@AddRecordActivity, "Failed to add tally", Toast.LENGTH_SHORT).show()
                     }
                 }
-
-                override fun onCancelled(databaseError: DatabaseError) {
-                    Toast.makeText(this@AddRecordActivity, "Failed to add tally", Toast.LENGTH_SHORT).show()
-                }
-            })
+        } else {
+            Toast.makeText(this@AddRecordActivity, "Failed to generate record ID", Toast.LENGTH_SHORT).show()
+        }
     }
+
+    override fun onResume() {
+        super.onResume()
+        // Retrieve the record name from the intent
+        val recordName = intent.getStringExtra("RECORD_NAME")
+        // Load existing records from Firebase
+        if (recordName != null) {
+            loadTallyRecords(recordName)
+        }
+    }
+
 }
